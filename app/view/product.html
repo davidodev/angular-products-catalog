@@ -1,0 +1,129 @@
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="cancelProduct()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel"> {{ modalOptions.title }} </h4>
+        </div>
+
+        <div id="modal-overflow" modal-resize="" class="modal-body modal-overflow" style="background: #F1F1F1">
+          <div class="content-details-wrap catalog clearfix">    
+            <div id="left">
+              <div class="part-edit part-edit-content">
+                <div class="block clearfix wrap-subtitle">
+                  <input type="text" style="width: 95%;" placeholder="Nazwa produktu" maxlenght="128" value="" ng-model="product.name" />
+                </div>
+                <div ng-show="conf.desc_product">
+                  <div ng-cloak ng-hide="TextEditorReady" class="highlight waiting">
+                      Wczytywanie edytora ...
+                  </div>
+                  
+                  <div ng-cloak ng-show="TextEditorReady">
+                      <textarea ng-model="product.desc" ckeditor="editorOptions" name="editor" id="editor" ></textarea>   
+                  </div>
+                </div>
+
+              </div>
+              
+              
+              <div class="part-edit">   
+                <h2 class="part-edit">Obrazek wyróżniający:</h2>
+                <div class="block clearfix">
+                  <a title="Wybierz" add-photo="featuredImage" style="margin-left: 10px" class="btn btn-primary btn-sm">Przeglądaj...</a>
+                  <div id="photo-cont">
+                    <img ng-if="featuredImage" src="../../{{ folderThumb }}{{ featuredImage.substring(featuredImage.indexOf('/')+1) }}" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="part-edit">   
+                <h2 class="part-edit">Galeria produktu:</h2>
+                <div class="block clearfix">
+                  <a title="Wybierz" add-photo="product.images" multiple style="margin-left: 10px" class="btn btn-primary btn-sm">Przeglądaj...</a>
+                  <ul ui-sortable id="photo-cont-2" ng-model="product.images">
+                    <li class="item" ng-repeat="image in product.images track by $index">
+                      <img src="../../{{ folderThumb }}{{ image.substring(image.indexOf('/')+1) }}" />
+                      <a class="icons icons-delete" href="" title="Usuń zdjęcie"></a>
+                      <input type="hidden" value="{{ image }}" />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              
+              <div class="part-edit">
+                <h2 class="part-edit">Metatagi - optymalizacja SEO</h2>     
+                
+                <fieldset style="border-width:0px; padding-top: 10px" id="meta">               
+                  <label style="width: 110px">Ustawienia</label>
+                  
+                  <div style="margin-bottom: 10px" data-toggle="buttons" class="btn-group">
+                     <label class="btn btn-primary btn-sm" ng-click="product.meta = 0" ng-class="{'active': product.meta == 0}">
+                         <input type="radio" value="0" name="meta" data-ng-model="data.meta"> automatyczne
+                     </label>
+                     <label class="btn btn-primary btn-sm" ng-click="product.meta = 1" ng-class="{'active': product.meta == 1}">
+                         <input type="radio" value="1" name="meta" data-ng-model="product.meta"> indywidualne
+                     </label>
+                  </div> 
+                  
+                  <table cellpadding="0" width="98%">               
+                    <tbody>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Tytuł </label>
+                        </td>
+                        <td width="85%" nowrap="">
+                          <input type="text" maxlength="128" value=" - " ng-readonly="!product.meta" style="width: 100%;" name="meta_title" ng-model="data.meta_title">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Opis </label>
+                        </td>
+                        <td nowrap="">
+                          <input type="text" maxlength="255" value="opis strony" ng-readonly="!product.meta" style="width: 100%;" name="meta_description" ng-model="product.meta_description">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Słowa kluczowe </label>
+                        </td>
+                        <td nowrap="">
+                          <input type="text" maxlength="255" value="slowa kluczowe" ng-readonly="!product.meta" style="width: 100%;" name="meta_keywords" ng-model="product.meta_keywords">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </fieldset>
+              </div>
+              
+            </div>
+            
+            <div id="right">
+              <div class="part-edit">
+                <h2 class="part-edit">Menu:</h2>
+                <div class="block clearfix">
+                  <label>Kategoria:</label>
+                  <select ng-model="product.c_id">
+                  	<option value="1">bez kategorii</option>
+                    <option repeat-tree="category in categories" ng-selected="product.c_id == category.c_id" ng-value="category.c_id"> {{ category.name }}</option>
+                  </select>
+
+                </div>
+                <div class="block clearfix">
+                  <label>Produkt widoczny:</label>
+                  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="product.visible">
+                </div>
+                <div class="block clearfix">
+                  <label>Kolejność:</label>
+                  <input type="text" maxlenght="3" value="" name="order" ng-model="product.order">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display: none" id="wait"></div>
+        </div>
+        <div class="modal-footer">
+          <div ng-show="saveprocess" class="waiting-small"></div>
+          <button type="button" class="btn btn-default btn-alert" ng-click="discardProduct()">Anuluj</button>
+          <button type="button" class="btn btn-primary confirm-button" ng-click="saveProduct(product, false)">{{ modalOptions.btnConfirm }}</button>
+          <button type="button" class="btn btn-primary confirm-button" ng-click="saveProduct(product, true)">{{ modalOptions.btnConfirmAndClose }}</button>
+        </div>
+

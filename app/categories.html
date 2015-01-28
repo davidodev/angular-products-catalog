@@ -1,0 +1,78 @@
+
+<div ng-controller="categoriesController">
+    
+
+  <div class="admin-header-fixed">
+    <div class="container" style="line-height: 30px; height: 30px">
+      Katalog > kategorie
+      <a ng-click="addCategory()" class="add-page navigation-page current" title="Dodaj kategorie"></a>
+      <div class="pull-right">
+        <a ui-sref="products" class="btn btn-default btn-sm">Produkty</a> 
+        <a ui-sref="categories" class="btn btn-default btn-sm">Kategorie</a> 
+        <a ui-sref="settings" class="btn btn-default btn-sm">Ustawienia</a> 
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix container">
+
+    <!-- App Actions -->
+    <div class="clearfix" style="margin: 20px 0 10px">
+
+    </div>
+    
+    <!-- App Body -->
+    <div class="app-body" ng-class="{loading: loading}">
+      <div ng-show="loading" class="app-content-loading">
+        <i class="fa fa-spinner fa-spin loading-spinner"></i>
+      </div>
+      
+      <ng-view class="app-content" ng-hide="loading"></ng-view>
+    </div>
+    
+    <div class="panel panel-default" style="margin: 0 0 10px">
+      <!-- Table -->
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <td width="20px"></td>
+            <td width="20px">
+               <input class="checkbox-table" type="checkbox">
+            </td>
+            <td width="95%">Nazwa</td>
+            <td width="5%"><span class="glyphicon glyphicon-eye-open"></span></td>
+            <td width="5%">
+              <span class="glyphicon glyphicon-trash"></span>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr repeat-tree-categories="category in categories | filter:searchCategory" current-page="currentPage">
+            <td>{{ $index + 1 }}</td>
+            <td>
+               <input class="checkbox-table" type="checkbox">
+            </td>
+            <td><span class="before-category">{{ before }}</span> <a href="" title="Edytuj kategorie" ng-click="editCategory(category)">{{ category.name }}</a></td>
+            <td>
+              <a href="" ng-click="toggleVisible(category)" title="Widoczny">
+              <span class="glyphicon" ng-class="{'glyphicon-ok': category.visible == 1, 'glyphicon-minus': category.visible == 0}"></span>
+              </a>
+            </td>
+            <td>
+              <a href="" ng-click="deleteCategory($index)" title="Usuń kategorie">
+              <span class="glyphicon glyphicon-trash"></span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="wait"></div>
+    
+    <!-- App Actions repeat -->
+    <div class="clearfix footer" style="margin: 0 0 10px">
+    </div>
+    
+  </div>
+
+</div>

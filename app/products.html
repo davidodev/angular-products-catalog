@@ -1,0 +1,119 @@
+
+<div ng-controller="productsController">
+  <div class="admin-header-fixed">
+    <div class="container" style="line-height: 30px; height: 30px">
+      Katalog > produkty
+      <a href="" ng-click="addProduct()" class="add-page navigation-page current" title="Dodaj produkt"></a>
+      <div class="pull-right">
+        <a ui-sref="products" class="btn btn-default btn-sm">Produkty</a> 
+        <a ui-sref="categories" class="btn btn-default btn-sm">Kategorie</a> 
+        <a ui-sref="settings" class="btn btn-default btn-sm">Ustawienia</a> 
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix container">
+    
+    <!-- App Actions -->
+    <div class="clearfix" style="margin: 20px 0 10px">
+      
+      <input type="text" class="form-control input-sm pull-right input-current-page" ng-model="currentPage" />
+      <span class="pull-right label-current-page">strona:</span>
+      <dir-pagination-controls class="pull-right pagination-footer" boundary-links="false" max-size="5" on-page-change="pageChangeHandler(newPageNumber)" template-url="../bower_components/angularpagination/dirPagination.tpl.html"></dir-pagination-controls>
+
+      <input class="form-control input-sm" type="text" ng-model="searchProduct" placeholder="Szukaj" style="width: 180px; display: inline-block; margin-right: 15px" />
+      
+      Filtrowanie
+      <select id="filter-category" class="form-control input-sm" ng-change="setCurrentPage()" ng-model="filter_category_id" style="width: 150px; display: inline-block; margin-left: 5px; margin-right: 15px">
+      	<option value="1" ng-selected="true">Wszystkie produkty</option>
+        <option repeat-tree="category in categories" value="{{ category.c_id }}"> {{ category.name }}</option> 
+      </select>
+      
+
+      Pokaż
+      <select ng-model="itemPerPage" class="form-control input-sm" style="width: 65px; margin-left: 5px; display: inline-block;">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+      </select>
+
+    </div>
+    
+
+    <!-- App Body -->
+    <div class="app-body" ng-class="{loading: loading}">
+      <div ng-show="loading" class="app-content-loading">
+        <i class="fa fa-spinner fa-spin loading-spinner"></i>
+      </div>
+      
+      <ng-view class="app-content" ng-hide="loading"></ng-view>
+    </div>
+    
+    <div class="panel panel-default" style="margin: 0 0 10px">
+      <!-- Table -->
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <td width="20px">#</td>
+            <td width="20px">
+               <input class="checkbox-table" type="checkbox">
+            </td>
+            <td width="65%">Nazwa</td>
+            <td width="30%">Kategoria</td>
+            <td width="5%"><span class="glyphicon glyphicon-eye-open"></span></td>
+            <td width="5%">
+              <span class="glyphicon glyphicon-trash"></span>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr dir-paginate="product in products | productsFilter: filter_category_id | filter:searchProduct | itemsPerPage: itemPerPage" current-page="currentPage">
+            <td>{{ $index + 1 }}</td>
+            <td>
+               <input class="checkbox-table" type="checkbox">
+            </td>
+            <td><a href="" title="Edytuj produkt" ng-click="editProduct(product)">{{ product.name }}</a></td>
+            <td>{{ product.category_name }}</td>
+            <td>
+              <a href="" ng-click="toggleShow(product)" title="Widoczny">
+              <span class="glyphicon" ng-class="{'glyphicon-ok': product.visible == 1, 'glyphicon-minus': product.visible == 0}"></span>
+              </a>
+            </td>
+            <td>
+              <a href="" ng-click="deleteProduct($index)" title="Usuń produkt">
+              <span class="glyphicon glyphicon-trash"></span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="wait"></div>
+    
+    <!-- App Actions repeat -->
+    <div class="clearfix footer" style="margin: 0 0 10px">
+      <div class="btn-group">
+        <button data-toggle="dropdown" type="button" class="btn btn-default btn-sm dropdown-toggle">
+          Wybierz akcje <span class="caret"></span>
+        </button>
+        <ul role="menu" class="dropdown-menu">
+          <li><a href="#">Ukryj</a></li>
+          <li><a href="#">Usuń</a></li>
+          <li><a href="#">Zmień kategorie</a></li>
+        </ul>
+      </div>
+      <input type="text" class="form-control input-sm pull-right input-current-page" ng-model="currentPage" />
+      <span class="pull-right label-current-page">strona:</span>
+      <dir-pagination-controls class="pull-right pagination-footer" boundary-links="false" max-size="15" on-page-change="pageChangeHandler(newPageNumber)" template-url="../bower_components/angularpagination/dirPagination.tpl.html"></dir-pagination-controls>
+      
+    </div>
+    
+  </div>
+
+</div>

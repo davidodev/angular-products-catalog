@@ -1,0 +1,117 @@
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="cancelCategory()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel"> {{ modalOptions.title }} </h4>
+        </div>
+
+        <div id="modal-overflow" modal-resize="" class="modal-body modal-overflow" style="background: #F1F1F1">
+          <div class="content-details-wrap catalog clearfix">    
+            <div id="left">
+              <div class="part-edit part-edit-content">
+                <div class="block clearfix wrap-subtitle">
+                  <input type="text" style="width: 95%;" placeholder="Nazwa produktu" maxlenght="128" value="" ng-model="category.name" />
+                </div>
+                <div ng-show="conf.desc_category">
+                  <div ng-cloak ng-hide="TextEditorReady" class="highlight waiting">
+                      Wczytywanie edytora ...
+                  </div>
+                  
+                  <div ng-cloak ng-show="TextEditorReady">
+                      <textarea ng-model="category.desc" ckeditor="editorOptions" name="editor" id="editor" ></textarea>   
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="part-edit">   
+                <h2 class="part-edit">Obrazek wyróżniający</h2>
+                <div class="block clearfix">
+                  <a title="Wybierz" add-photo="featuredImage" style="margin-left: 10px" class="btn btn-primary btn-sm">Przeglądaj...</a>
+
+                  <div style="display: none" id="wait"></div>
+                  <ul id="photo-cont">
+                    <img ng-if="featuredImage" src="../../{{ folderThumb }}{{ featuredImage.substring(featuredImage.indexOf('/')+1) }}" />
+                  </ul>
+                </div>
+              </div>
+              
+              
+              <div class="part-edit">
+                <h2 class="part-edit">Metatagi - optymalizacja SEO</h2>     
+                
+                <fieldset style="border-width:0px; padding-top: 10px" id="meta">               
+                  <label style="width: 110px">Ustawienia</label>
+                  
+                  <div style="margin-bottom: 10px" data-toggle="buttons" class="btn-group">
+                     <label class="btn btn-primary btn-sm" ng-click="category.meta = 0" ng-class="{'active': category.meta == 0}">
+                         <input type="radio" value="0" name="meta" data-ng-model="category.meta"> automatyczne
+                     </label>
+                     <label class="btn btn-primary btn-sm" ng-click="category.meta = 1" ng-class="{'active': category.meta == 1}">
+                         <input type="radio" value="1" name="meta" data-ng-model="category.meta"> indywidualne
+                     </label>
+                  </div> 
+                  
+                  <table cellpadding="0" width="98%">               
+                    <tbody>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Tytuł </label>
+                        </td>
+                        <td width="85%" nowrap="">
+                          <input type="text" maxlength="128" value=" - " ng-readonly="!category.meta" style="width: 100%;" name="meta_title" ng-model="data.meta_title">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Opis </label>
+                        </td>
+                        <td nowrap="">
+                          <input type="text" maxlength="255" value="opis strony" ng-readonly="!category.meta" style="width: 100%;" name="meta_description" ng-model="category.meta_description">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="left" nowrap="">
+                          <label style="width: 110px">Słowa kluczowe </label>
+                        </td>
+                        <td nowrap="">
+                          <input type="text" maxlength="255" value="slowa kluczowe" ng-readonly="!category.meta" style="width: 100%;" name="meta_keywords" ng-model="category.meta_keywords">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </fieldset>
+              </div>
+              
+            </div>
+            
+            <div id="right">
+              <div class="part-edit">
+                <h2 class="part-edit">Menu:</h2>
+                <div class="block clearfix">
+                  <label>Kategoria nadrzędna:</label>
+                  <select ng-model="category.pc_id">
+                  	<option value="1"> -- brak -- </option>
+                    <option repeat-tree="item in categories" ng-selected="category.pc_id == item.c_id" value="item.c_id">
+                    {{ item.name }}</option>
+                  </select>
+
+                </div>
+                <div class="block clearfix">
+                  <label>Produkt widoczny:</label>
+                  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="category.visible">
+                </div>
+                <div class="block clearfix">
+                  <label>Kolejność:</label>
+                  <input type="text" maxlenght="3" value="" name="order" ng-model="category.order">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <div ng-show="saveprocess" class="waiting-small"></div>
+          <button type="button" class="btn btn-default btn-alert" ng-click="discardCategory()">Anuluj</button>
+          <button type="button" class="btn btn-primary confirm-button" ng-click="saveCategory(category, false)">{{ modalOptions.btnConfirm }}</button>
+          <button type="button" class="btn btn-primary confirm-button" ng-click="saveCategory(category, true)">{{ modalOptions.btnConfirmAndClose }}</button>
+        </div>
+
